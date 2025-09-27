@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <!-- Gradient for glassmorphism effect -->
+    <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A3DAFD;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#6BB6FF;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#4A90E2;stop-opacity:0.9" />
+    </linearGradient>
+
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+
+    <!-- Blur effect for glassmorphism -->
+    <filter id="blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background circle with glassmorphism effect -->
+  <circle cx="50" cy="50" r="45"
+          fill="url(#glassGradient)"
+          stroke="rgba(255,255,255,0.3)"
+          stroke-width="1"
+          filter="url(#shadow)"
+          opacity="0.9"/>
+
+  <!-- Clock face -->
+  <circle cx="50" cy="50" r="35"
+          fill="none"
+          stroke="rgba(255,255,255,0.4)"
+          stroke-width="1.5"/>
+
+  <!-- Hour markers -->
+  <g stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round">
+    <!-- 12 o'clock -->
+    <line x1="50" y1="18" x2="50" y2="25"/>
+    <!-- 3 o'clock -->
+    <line x1="82" y1="50" x2="75" y2="50"/>
+    <!-- 6 o'clock -->
+    <line x1="50" y1="82" x2="50" y2="75"/>
+    <!-- 9 o'clock -->
+    <line x1="18" y1="50" x2="25" y2="50"/>
+  </g>
+
+  <!-- Minute markers -->
+  <g stroke="rgba(255,255,255,0.4)" stroke-width="1" stroke-linecap="round">
+    <!-- 1 o'clock -->
+    <line x1="65.5" y1="21.5" x2="63" y2="24"/>
+    <!-- 2 o'clock -->
+    <line x1="78.5" y1="34.5" x2="76" y2="37"/>
+    <!-- 4 o'clock -->
+    <line x1="78.5" y1="65.5" x2="76" y2="63"/>
+    <!-- 5 o'clock -->
+    <line x1="65.5" y1="78.5" x2="63" y2="76"/>
+    <!-- 7 o'clock -->
+    <line x1="34.5" y1="78.5" x2="37" y2="76"/>
+    <!-- 8 o'clock -->
+    <line x1="21.5" y1="65.5" x2="24" y2="63"/>
+    <!-- 10 o'clock -->
+    <line x1="21.5" y1="34.5" x2="24" y2="37"/>
+    <!-- 11 o'clock -->
+    <line x1="34.5" y1="21.5" x2="37" y2="24"/>
+  </g>
+
+  <!-- Clock hands showing 10:10 (classic watch advertisement time) -->
+  <!-- Hour hand -->
+  <line x1="50" y1="50" x2="42" y2="32"
+        stroke="rgba(255,255,255,0.9)"
+        stroke-width="3"
+        stroke-linecap="round"/>
+
+  <!-- Minute hand -->
+  <line x1="50" y1="50" x2="63" y2="32"
+        stroke="rgba(255,255,255,0.9)"
+        stroke-width="2.5"
+        stroke-linecap="round"/>
+
+  <!-- Center dot -->
+  <circle cx="50" cy="50" r="3"
+          fill="rgba(255,255,255,0.9)"/>
+
+  <!-- Subtle highlight for glass effect -->
+  <ellipse cx="42" cy="35" rx="8" ry="12"
+           fill="rgba(255,255,255,0.15)"
+           transform="rotate(-20 42 35)"/>
+</svg>
