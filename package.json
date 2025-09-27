@@ -1,0 +1,25 @@
+{
+  "name": "easytimer",
+  "version": "1.0.0",
+  "description": "A modern, ad-free web-based timer application with a beautiful glassmorphism design",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "preview": "python -m http.server 4173"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karadhub/easytimer.git"
+  },
+  "keywords": [
+    "timer",
+    "countdown",
+    "stopwatch",
+    "web-app",
+    "productivity",
+    "pomodoro"
+  ],
+  "author": "karadhub",
+  "license": "MIT",
+  "homepage": "https://github.com/karadhub/easytimer#readme"
+}
