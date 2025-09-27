@@ -39,7 +39,7 @@
         start_button.disabled = true;
         pause_button.disabled = false;
         set_button.disabled = true;
-        reset_button.disabled = false;
+        disableInputs(true);
 
         startTime = new Date().valueOf();
 
@@ -55,6 +55,7 @@
         start_button.disabled = false;
         pause_button.disabled = true;
         set_button.disabled = false;
+        disableInputs(false);
 
         window.clearTimeout(timer);
     };
@@ -65,6 +66,7 @@
         pause_button.disabled = true;
         set_button.disabled = false;
         reset_button.disabled = true;
+        disableInputs(false);
 
         hour_input.value = "00";
         min_input.value = "00";
@@ -78,6 +80,7 @@
         start_button.disabled = false;
         pause_button.disabled = true;
         set_button.disabled = false;
+        disableInputs(false);
 
         var hour = hour_input.value;
         var min = min_input.value;
@@ -97,6 +100,16 @@
         window.clearTimeout(timer);
     };
 
+    function disableInputs(disabled) {
+        hour_input.disabled = disabled;
+        min_input.disabled = disabled;
+        sec_input.disabled = disabled;
+        const presetButtons = document.querySelectorAll(
+            ".preset-btn, .custom-preset-btn"
+        );
+        presetButtons.forEach((btn) => (btn.disabled = disabled));
+    }
+
     function padZero(n) {
         return n < 10 ? "0" + n : n;
     }
@@ -107,15 +120,13 @@
         let h = Math.floor(t / 3600);
         let m = Math.floor(t / 60) % 60;
         let s = Math.floor(t) % 60;
-        timer_main.innerHTML = `<strong>${padZero(h)}:${padZero(m)}:${padZero(
-            s
-        )}</strong>`;
-        let color = "#a3dafd";
+        timer_main.innerHTML = `${padZero(h)}:${padZero(m)}:${padZero(s)}`;
+        let color = "#e0f7ff";
         if (duration !== undefined) {
             if (counter < 0 && counter % 2 === 0) {
                 color = "red";
-            } else if (counter < 60) {
-                color = "yellow";
+            } else if (counter > 0 && counter < 10) {
+                color = "#ffc107"; // A warning yellow
             }
         }
         timer_main.style.color = color;
@@ -125,12 +136,23 @@
         counter--;
         updateCounter();
         window.clearTimeout(timer);
-        if (counter <= 0) {
+        if (counter < 0) {
+            // Changed to < 0 to allow 00:00:00 to show
             start_button.disabled = true;
             pause_button.disabled = true;
             set_button.disabled = false;
-            reset_button.disabled = false;
-            timer = window.setTimeout(onTimer, 500);
+            disableInputs(false);
+            // Flash timer when done
+            let flash = true;
+            const flashInterval = setInterval(() => {
+                timer_main.style.visibility = flash ? "hidden" : "visible";
+                flash = !flash;
+            }, 500);
+            // Stop flashing after a few seconds
+            setTimeout(() => {
+                clearInterval(flashInterval);
+                timer_main.style.visibility = "visible";
+            }, 5000);
             return;
         }
 
@@ -152,13 +174,13 @@
 
         presetButtons.forEach((btn) => {
             btn.addEventListener("click", function () {
-                const hours = this.dataset.hours;
-                const minutes = this.dataset.minutes;
-                const seconds = this.dataset.seconds;
+                const hours = this.dataset.hours.padStart(2, "0");
+                const minutes = this.dataset.minutes.padStart(2, "0");
+                const seconds = this.dataset.seconds.padStart(2, "0");
 
-                hour_input.value = hours.padStart(2, "0");
-                min_input.value = minutes.padStart(2, "0");
-                sec_input.value = seconds.padStart(2, "0");
+                hour_input.value = hours;
+                min_input.value = minutes;
+                sec_input.value = seconds;
 
                 setTime();
             });
@@ -166,30 +188,25 @@
 
         if (savePresetBtn) {
             savePresetBtn.addEventListener("click", function () {
-                const name = prompt("Enter a name for this preset:");
+                const h = hour_input.value;
+                const m = min_input.value;
+                const s = sec_input.value;
+                if (h === "00" && m === "00" && s === "00") {
+                    alert("Please set a time before saving a preset.");
+                    return;
+                }
+                const name = prompt(
+                    `Enter a name for this preset (${h}:${m}:${s}):`
+                );
                 if (name && name.trim()) {
-                    saveCustomPreset(name.trim());
+                    saveCustomPreset(name.trim(), h, m, s);
                 }
             });
         }
     }
 
-    function saveCustomPreset(name) {
-        const hours = hour_input.value;
-        const minutes = min_input.value;
-        const seconds = sec_input.value;
-
-        if (hours === "00" && minutes === "00" && seconds === "00") {
-            alert("Please set a time before saving a preset.");
-            return;
-        }
-
-        const preset = {
-            name: name,
-            hours: hours,
-            minutes: minutes,
-            seconds: seconds,
-        };
+    function saveCustomPreset(name, hours, minutes, seconds) {
+        const preset = { name, hours, minutes, seconds };
 
         let customPresets = JSON.parse(
             localStorage.getItem("customPresets") || "[]"
@@ -212,7 +229,7 @@
 
         customPresets.forEach((preset, index) => {
             const presetBtn = document.createElement("button");
-            presetBtn.className = "custom-preset-btn";
+            presetBtn.className = "preset-btn custom-preset-btn";
             presetBtn.innerHTML = `${preset.name}<br><small>${preset.hours}:${preset.minutes}:${preset.seconds}</small>`;
 
             presetBtn.addEventListener("click", function () {
@@ -222,9 +239,10 @@
                 setTime();
             });
 
-            const deleteBtn = document.createElement("button");
+            const deleteBtn = document.createElement("span");
             deleteBtn.className = "delete-btn";
             deleteBtn.innerHTML = "×";
+            deleteBtn.title = "Delete preset";
             deleteBtn.addEventListener("click", function (e) {
                 e.stopPropagation();
                 deleteCustomPreset(index);

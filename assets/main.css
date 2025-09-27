@@ -1,23 +1,18 @@
 html, body {
-    overflow: hidden;
-    color: white;
     height: 100%;
-}
-
-body {
-    background: linear-gradient(135deg, #1f2023, #2c3e50);
-    background-attachment: fixed;
-    padding: 0;
     margin: 0;
+    padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #1d2630;
+    color: white;
+    overflow-x: hidden;
 }
 
 .main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
 }
 
@@ -26,15 +21,12 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 1em;
-    background: rgba(0, 0, 0, 0.2);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-    z-index: 10;
+    padding: 1em 2em;
+    background: rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-    color: white;
     text-transform: uppercase;
     font-weight: bold;
+    flex-shrink: 0;
 }
 
 #headerText a {
@@ -44,148 +36,104 @@ body {
 
 .top-nav {
     display: flex;
-    gap: 1em;
+    gap: 1.5em;
 }
 
 .top-nav a {
     color: white;
     text-decoration: none;
-    padding: 0.5em 1em;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
+    padding: 0.5em 0;
+    border-bottom: 2px solid transparent;
+    transition: color 0.3s ease, border-bottom-color 0.3s ease;
 }
 
-.top-nav a:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+.top-nav a:hover, .top-nav a.active {
+    color: #a3dafd;
+    border-bottom-color: #a3dafd;
 }
 
-.top-nav a.active {
-    background-color: rgba(255, 255, 255, 0.3);
+.github-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.github-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.github-text {
+    display: inline-block;
 }
 
 .timer-section {
-    display: flex;
+    display: none; /* Hidden by default, shown by JS */
     justify-content: center;
     align-items: center;
     flex-grow: 1;
     width: 100%;
+    padding: 2rem 1rem;
+}
+
+.timer-section.active {
+    display: flex;
 }
 
 .glass-container {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 2rem 4rem;
+    background: rgba(50, 60, 75, 0.5);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem 2.5rem;
     width: auto;
-    max-width: 90%;
-}
-
-header {
-    color: white;
-    text-align: center;
-    height: auto;
-    margin-bottom: 1rem;
-}
-
-a { color: white; }
-
-h1 { font-size: 40px; }
-
-table {
-    width: 100%;
-    height: auto;
-    border: 0;
-}
-
-#timer {
-    color: white;
-    text-align: center;
-}
-#timer strong {
-    font-size: 10vw;
-    font-weight: 200;
-    text-shadow: 0 0 10px rgba(163, 218, 253, 0.7);
-}
-
-#controls {
-    color: white;
-    text-align: center;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
-    margin-top: 2rem;
 }
 
-#controls div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-#controls input {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    padding: 12px 22px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    margin: 0 5px;
-}
-
-#controls input[type="text"] {
-    width: 50px;
-    padding: 10px;
+.timer-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
     text-align: center;
 }
 
-#controls input[type="button"]:hover {
-    background: rgba(255, 255, 255, 0.3);
+.timer-display span {
+    font-size: 5.5rem;
+    font-weight: 300;
+    text-shadow: 0 0 20px rgba(163, 218, 253, 0.7);
+    color: #e0f7ff;
 }
 
-#controls input[type="button"]:disabled {
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.4);
-    cursor: not-allowed;
-}
-
-#presets {
-    color: white;
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-.preset-buttons {
+.presets {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.8rem;
-    margin-bottom: 1rem;
 }
 
 .preset-btn {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
     padding: 8px 16px;
-    border-radius: 12px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
     transition: all 0.3s ease;
-    min-width: 80px;
     text-align: center;
 }
 
 .preset-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
 }
 
@@ -196,64 +144,108 @@ table {
     margin-top: 2px;
 }
 
-.custom-preset {
-    margin-top: 1rem;
+.save-preset-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
 #save-preset-btn {
-    background: rgba(76, 175, 80, 0.8);
-    border: 1px solid rgba(76, 175, 80, 0.9);
+    background: #28a745;
+    border: none;
     color: white;
-    padding: 8px 16px;
+    padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    font-weight: 600;
     transition: background-color 0.3s ease;
-    margin-bottom: 0.5rem;
 }
 
 #save-preset-btn:hover {
-    background: rgba(76, 175, 80, 1);
+    background: #218838;
 }
 
 #custom-presets {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+    justify-content: center;
+    gap: 0.8rem;
 }
 
-.custom-preset-btn {
-    background: rgba(255, 193, 7, 0.8);
-    border: 1px solid rgba(255, 193, 7, 0.9);
+.custom-time-setter {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #ccc;
+    width: 100%;
+    justify-content: center;
+}
+
+.time-inputs {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.time-input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.custom-time-setter input[type="text"] {
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    padding: 6px 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.custom-time-setter button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 0.6em 1em;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 12px;
     transition: background-color 0.3s ease;
-    position: relative;
+    height: 40px;
 }
 
-.custom-preset-btn:hover {
-    background: rgba(255, 193, 7, 1);
+.custom-time-setter button:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
-.custom-preset-btn .delete-btn {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #f44336;
+.controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.countdown-label {
+    display: none;
+}
+.controls button {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    border: none;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 10px;
+    padding: 12px 24px;
+    border-radius: 8px;
     cursor: pointer;
-    line-height: 1;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    min-width: 100px;
+}
+
+.controls button:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .hamburger-menu {
@@ -266,22 +258,32 @@ table {
     width: 25px;
     height: 3px;
     margin: 5px auto;
-    -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     background-color: white;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
+    .header {
+        padding: 1em;
+        justify-content: space-between;
+    }
+
+    #headerText {
+        flex-grow: 1;
+    }
+
     .top-nav {
         display: none;
         flex-direction: column;
         width: 100%;
         position: absolute;
-        top: 60px;
+        top: 60px; /* Adjust based on header height */
         left: 0;
-        background: rgba(0, 0, 0, 0.8);
-        -webkit-backdrop-filter: blur(10px);
+        background: rgba(29, 38, 48, 0.95);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 100;
     }
 
     .top-nav.active {
@@ -294,33 +296,65 @@ table {
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .hamburger-menu {
-        display: block;
-        position: absolute;
-        top: 1em;
-        left: 1em;
-        z-index: 11;
+    .github-link {
+        justify-content: center;
     }
 
-    #timer strong {
-        font-size: 18vw;
+    .github-icon {
+        display: inline-block; /* Show icon on mobile */
+    }
+
+    .github-text {
+        display: none; /* Hide text on mobile */
+    }
+
+    .hamburger-menu {
+        display: block;
+        z-index: 101;
     }
 
     .glass-container {
-        padding: 1rem 2rem;
+        padding: 1.5rem;
+        margin: 0 1rem;
+        gap: 1rem;
     }
 
-    .preset-buttons {
+    .timer-title {
+        font-size: 1.5rem;
+    }
+
+    .timer-display span {
+        font-size: 4rem;
+    }
+
+    .presets {
         gap: 0.5rem;
     }
 
-    .preset-btn {
-        min-width: 70px;
-        padding: 6px 12px;
-        font-size: 12px;
+    .custom-time-setter {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
     }
 
-    .preset-btn small {
-        font-size: 10px;
+    .time-inputs {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .custom-time-setter button {
+        width: 100%;
+    }
+    .countdown-label {
+        display: block;
+    }
+    .controls {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.8rem;
+    }
+
+    .controls button {
+        width: 100%;
     }
 }
