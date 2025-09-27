@@ -1,82 +1,96 @@
-var timer = null;
+(function () {
+    var timer = null;
+    var counter = 0;
+    var tcount = 0;
+    var startTime;
 
-var counter = 0;
-var tcount = 0;
-var startTime;
+    const normal_elapse = 10;
+    var next_elapse = normal_elapse;
 
-const normal_elapse = 10;
-// count every 10ms
+    var start_button_stopwatch,
+        stop_button,
+        reset_button_stopwatch,
+        stopwatch_main;
 
-var next_elapse = normal_elapse;
+    document.addEventListener("DOMContentLoaded", (event) => {
+        start_button_stopwatch = document.getElementById(
+            "start_button_stopwatch"
+        );
+        stop_button = document.getElementById("stop_button");
+        reset_button_stopwatch = document.getElementById(
+            "reset_button_stopwatch"
+        );
+        stopwatch_main = document.getElementById("stopwatch_main");
 
-window.onload = function(){
-    start_button.disabled = false;
-    stop_button.disabled = true;
-    reset_button.disabled = true;
+        if (start_button_stopwatch) {
+            start_button_stopwatch.disabled = false;
+            stop_button.disabled = true;
+            reset_button_stopwatch.disabled = true;
+            updateCounter();
+        }
+    });
 
-    stopwatch_main.style.color = "#A3DAFD";
-}
+    window.startStopwatch = function () {
+        if (!start_button_stopwatch) return;
+        start_button_stopwatch.disabled = true;
+        stop_button.disabled = false;
+        reset_button_stopwatch.disabled = true;
 
-function padZero( n ){
-    return n < 10 ? "0" + n : n;
-}
+        startTime = new Date().valueOf();
+        timer = window.setTimeout(onTimer, next_elapse);
+    };
 
-function updateCounter(){
-    let m = Math.floor( counter / 100 / 60 );
-    let s = Math.floor( counter / 100 ) % 60;
-    let ms = Math.floor( counter ) % 100;
+    window.stopStopwatch = function () {
+        if (!start_button_stopwatch) return;
+        start_button_stopwatch.disabled = false;
+        stop_button.disabled = true;
+        reset_button_stopwatch.disabled = false;
 
-    stopwatch_main.innerHTML = `<strong>${padZero( m )}:${padZero( s )},${padZero( ms )}</strong>`;
-}
+        tcount = 0;
+        window.clearTimeout(timer);
+    };
 
-function start(){
-    start_button.disabled = true;
-    stop_button.disabled = false;
-    reset_button.disabled = true;
+    window.resetStopwatch = function () {
+        if (!start_button_stopwatch) return;
+        start_button_stopwatch.disabled = false;
+        stop_button.disabled = true;
+        reset_button_stopwatch.disabled = true;
 
-    startTime = new Date().valueOf();
-    // init start time
+        counter = 0;
+        tcount = 0;
+        updateCounter();
+        window.clearTimeout(timer);
+    };
 
-    timer = window.setTimeout( "onTimer()" , next_elapse );
-}
-
-function stop(){
-    start_button.disabled = false;
-    stop_button.disabled = true;
-    reset_button.disabled = false;
-    
-    tcount = 0;
-    window.clearTimeout( timer );
-}
-
-function reset(){
-    start_button.disabled = false;
-    stop_button.disabled = true;
-    reset_button.disabled = true;
-
-    counter = 0;
-    tcount = 0;
-    updateCounter();
-    window.clearTimeout( timer );
-}
-
-function onTimer(){
-    counter++;
-    tcount++;
-    updateCounter();
-    window.clearTimeout( timer );
-
-    var tcountSecs = tcount * 10;
-    var elapseSecs = new Date().valueOf() - startTime;
-    var diffSecs = tcountSecs - elapseSecs;
-    next_elapse = normal_elapse + diffSecs;
-    if ( next_elapse < 0 )
-    {
-        next_elapse = 0;
+    function padZero(n) {
+        return n < 10 ? "0" + n : n;
     }
-    // calibration
 
-    timer = window.setTimeout( "onTimer()" , next_elapse );
-}
+    function updateCounter() {
+        if (!stopwatch_main) return;
+        let m = Math.floor(counter / 100 / 60);
+        let s = Math.floor(counter / 100) % 60;
+        let ms = Math.floor(counter) % 100;
 
-updateCounter();
+        stopwatch_main.innerHTML = `<strong>${padZero(m)}:${padZero(
+            s
+        )},${padZero(ms)}</strong>`;
+        stopwatch_main.style.color = "#A3DAFD";
+    }
+
+    function onTimer() {
+        counter++;
+        tcount++;
+        updateCounter();
+        window.clearTimeout(timer);
+
+        var tcountSecs = tcount * 10;
+        var elapseSecs = new Date().valueOf() - startTime;
+        var diffSecs = tcountSecs - elapseSecs;
+        next_elapse = normal_elapse + diffSecs;
+        if (next_elapse < 0) {
+            next_elapse = 0;
+        }
+        timer = window.setTimeout(onTimer, next_elapse);
+    }
+})();

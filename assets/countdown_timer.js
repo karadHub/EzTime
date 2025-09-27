@@ -1,137 +1,251 @@
-var timer = null;
+(function () {
+    var timer = null;
+    var duration;
+    var counter = 0;
+    var startTime;
 
-/* Note on the counter variable:
-The counter variable counts downward from the time that is previously
-set. When below zero, it acts as a helper for flashing text instead of
-(sensibly) counting downward.
-*/
-var duration;
-var counter = 0;
-var startTime;
+    const normal_elapse = 1000;
+    var next_elapse = normal_elapse;
 
-const normal_elapse = 1000;
+    var start_button, pause_button, reset_button, set_button;
+    var hour_input, min_input, sec_input;
+    var timer_main;
 
-var next_elapse = normal_elapse;
+    document.addEventListener("DOMContentLoaded", (event) => {
+        start_button = document.getElementById("start_button_countdown");
+        pause_button = document.getElementById("pause_button");
+        reset_button = document.getElementById("reset_button_countdown");
+        set_button = document.getElementById("set_button");
 
-window.onload = function(){
-    pause_button.disabled = true;
-    hour_input.value = "00";
-    min_input.value = "00";
-    sec_input.value = "00";
-}
+        hour_input = document.getElementById("hour_input");
+        min_input = document.getElementById("min_input");
+        sec_input = document.getElementById("sec_input");
 
-// region finished by y5nw
+        timer_main = document.getElementById("timer_main");
 
-function padZero(n) {
-    return n < 10 ? "0" + n : n;
-}
+        if (pause_button) pause_button.disabled = true;
+        if (hour_input) hour_input.value = "00";
+        if (min_input) min_input.value = "00";
+        if (sec_input) sec_input.value = "00";
+        if (timer_main) updateCounter();
 
-function updateCounter() {
-    let t = Math.max( counter, 0 );
-    let h = Math.floor( t / 3600 );
-    let m = Math.floor( t / 60 ) % 60;
-    let s = Math.floor( t ) % 60;
-    // here can add sth: for example when there's only one min left, make the time red
-    timer_main.innerHTML = `<strong>${padZero(h)}:${padZero(m)}:${padZero(s)}</strong>`
-    let color = "#a3dafd";
-    if ( duration != undefined ) { // color text (esp. zero) only if the timer was previous started
-        if ( counter < 0 && counter % 2 == 0 )
-        {
-            color = "red";
-        } else if ( counter < 60 )
-        {
-            color = "yellow";
-        }
-    }
-    timer_main.style.color = color;
-}
+        // Initialize preset functionality
+        initializePresets();
+        loadCustomPresets();
+    });
 
-function setTime(){
-    start_button.disabled = false;
-    pause_button.disabled = true;
-    set_button.disabled = false;
-
-    var hour = hour_input.value;
-    var min = min_input.value;
-    var sec = sec_input.value;
-
-    if ( isNaN( hour ) || isNaN( min ) || isNaN( sec ) )
-    {
-        return;
-    } // one of the inputs isn't a number, return
-
-    var hour_num = new Number( hour );
-    var min_num = new Number( min );
-    var sec_num = new Number( sec );
-    counter = hour_num * 3600 + min_num * 60 + sec_num;
-    duration = undefined;
-    updateCounter();
-
-    window.clearTimeout( timer );
-}
-
-function start(){
-    start_button.disabled = true;
-    pause_button.disabled = false;
-    set_button.disabled = true;
-    reset_button.disabled = false;
-
-    startTime = new Date().valueOf();
-    // init start time
-
-    if (counter < 0) {
-        counter = 0;
-    }
-    duration = counter;
-    timer = window.setTimeout( "onTimer()" , next_elapse );
-}
-
-function pause(){
-    start_button.disabled = false;
-    pause_button.disabled = true;
-    set_button.disabled = false;
-
-    window.clearTimeout( timer );
-}
-
-function reset(){
-    start_button.disabled = false;
-    pause_button.disabled = true;
-    set_button.disabled = false;
-    reset_button.disabled = true;
-
-    hour_input.value = "00";
-    min_input.value = "00";
-    sec_input.value = "00";
-
-    setTime();
-}
-
-function onTimer(){
-    counter--;
-    updateCounter();
-    window.clearTimeout( timer );
-    if ( counter <= 0 )
-    {
+    window.start = function () {
+        if (!start_button) return;
         start_button.disabled = true;
+        pause_button.disabled = false;
+        set_button.disabled = true;
+        reset_button.disabled = false;
+
+        startTime = new Date().valueOf();
+
+        if (counter < 0) {
+            counter = 0;
+        }
+        duration = counter;
+        timer = window.setTimeout(onTimer, next_elapse);
+    };
+
+    window.pause = function () {
+        if (!start_button) return;
+        start_button.disabled = false;
         pause_button.disabled = true;
         set_button.disabled = false;
-        reset_button.disabled = false;
-        timer = window.setTimeout( "onTimer()" , 500 );
-        return;
-    } // time's up
 
-    var counterSecs = (duration-counter) * 1000;
-    var elapseSecs = new Date().valueOf() - startTime;
-    var diffSecs = counterSecs - elapseSecs;
-    next_elapse = normal_elapse + diffSecs;
-    if ( next_elapse < 0 )
-    {
-        next_elapse = 0;
+        window.clearTimeout(timer);
+    };
+
+    window.reset = function () {
+        if (!start_button) return;
+        start_button.disabled = false;
+        pause_button.disabled = true;
+        set_button.disabled = false;
+        reset_button.disabled = true;
+
+        hour_input.value = "00";
+        min_input.value = "00";
+        sec_input.value = "00";
+
+        setTime();
+    };
+
+    window.setTime = function () {
+        if (!start_button) return;
+        start_button.disabled = false;
+        pause_button.disabled = true;
+        set_button.disabled = false;
+
+        var hour = hour_input.value;
+        var min = min_input.value;
+        var sec = sec_input.value;
+
+        if (isNaN(hour) || isNaN(min) || isNaN(sec)) {
+            return;
+        }
+
+        var hour_num = Number(hour);
+        var min_num = Number(min);
+        var sec_num = Number(sec);
+        counter = hour_num * 3600 + min_num * 60 + sec_num;
+        duration = undefined;
+        updateCounter();
+
+        window.clearTimeout(timer);
+    };
+
+    function padZero(n) {
+        return n < 10 ? "0" + n : n;
     }
-    // calibration
 
-    timer = window.setTimeout( "onTimer()" , next_elapse );
-}
+    function updateCounter() {
+        if (!timer_main) return;
+        let t = Math.max(counter, 0);
+        let h = Math.floor(t / 3600);
+        let m = Math.floor(t / 60) % 60;
+        let s = Math.floor(t) % 60;
+        timer_main.innerHTML = `<strong>${padZero(h)}:${padZero(m)}:${padZero(
+            s
+        )}</strong>`;
+        let color = "#a3dafd";
+        if (duration !== undefined) {
+            if (counter < 0 && counter % 2 === 0) {
+                color = "red";
+            } else if (counter < 60) {
+                color = "yellow";
+            }
+        }
+        timer_main.style.color = color;
+    }
 
-updateCounter();
+    function onTimer() {
+        counter--;
+        updateCounter();
+        window.clearTimeout(timer);
+        if (counter <= 0) {
+            start_button.disabled = true;
+            pause_button.disabled = true;
+            set_button.disabled = false;
+            reset_button.disabled = false;
+            timer = window.setTimeout(onTimer, 500);
+            return;
+        }
+
+        var counterSecs = (duration - counter) * 1000;
+        var elapseSecs = new Date().valueOf() - startTime;
+        var diffSecs = counterSecs - elapseSecs;
+        next_elapse = normal_elapse + diffSecs;
+        if (next_elapse < 0) {
+            next_elapse = 0;
+        }
+
+        timer = window.setTimeout(onTimer, next_elapse);
+    }
+
+    // Preset timer functionality
+    function initializePresets() {
+        const presetButtons = document.querySelectorAll(".preset-btn");
+        const savePresetBtn = document.getElementById("save-preset-btn");
+
+        presetButtons.forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const hours = this.dataset.hours;
+                const minutes = this.dataset.minutes;
+                const seconds = this.dataset.seconds;
+
+                hour_input.value = hours.padStart(2, "0");
+                min_input.value = minutes.padStart(2, "0");
+                sec_input.value = seconds.padStart(2, "0");
+
+                setTime();
+            });
+        });
+
+        if (savePresetBtn) {
+            savePresetBtn.addEventListener("click", function () {
+                const name = prompt("Enter a name for this preset:");
+                if (name && name.trim()) {
+                    saveCustomPreset(name.trim());
+                }
+            });
+        }
+    }
+
+    function saveCustomPreset(name) {
+        const hours = hour_input.value;
+        const minutes = min_input.value;
+        const seconds = sec_input.value;
+
+        if (hours === "00" && minutes === "00" && seconds === "00") {
+            alert("Please set a time before saving a preset.");
+            return;
+        }
+
+        const preset = {
+            name: name,
+            hours: hours,
+            minutes: minutes,
+            seconds: seconds,
+        };
+
+        let customPresets = JSON.parse(
+            localStorage.getItem("customPresets") || "[]"
+        );
+        customPresets.push(preset);
+        localStorage.setItem("customPresets", JSON.stringify(customPresets));
+
+        loadCustomPresets();
+    }
+
+    function loadCustomPresets() {
+        const customPresetsContainer =
+            document.getElementById("custom-presets");
+        if (!customPresetsContainer) return;
+
+        const customPresets = JSON.parse(
+            localStorage.getItem("customPresets") || "[]"
+        );
+        customPresetsContainer.innerHTML = "";
+
+        customPresets.forEach((preset, index) => {
+            const presetBtn = document.createElement("button");
+            presetBtn.className = "custom-preset-btn";
+            presetBtn.innerHTML = `${preset.name}<br><small>${preset.hours}:${preset.minutes}:${preset.seconds}</small>`;
+
+            presetBtn.addEventListener("click", function () {
+                hour_input.value = preset.hours;
+                min_input.value = preset.minutes;
+                sec_input.value = preset.seconds;
+                setTime();
+            });
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "delete-btn";
+            deleteBtn.innerHTML = "×";
+            deleteBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                deleteCustomPreset(index);
+            });
+
+            presetBtn.appendChild(deleteBtn);
+            customPresetsContainer.appendChild(presetBtn);
+        });
+    }
+
+    function deleteCustomPreset(index) {
+        if (confirm("Are you sure you want to delete this preset?")) {
+            let customPresets = JSON.parse(
+                localStorage.getItem("customPresets") || "[]"
+            );
+            customPresets.splice(index, 1);
+            localStorage.setItem(
+                "customPresets",
+                JSON.stringify(customPresets)
+            );
+            loadCustomPresets();
+        }
+    }
+})();
