@@ -1,0 +1,7 @@
+# Redirects for Easy Timer
+
+# Redirect root to index.html
+/   /index.html   200
+
+# SPA fallback for client-side routing
+/*  /index.html   200
