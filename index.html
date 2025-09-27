@@ -18,7 +18,10 @@
             <nav class="top-nav">
                 <a href="#" id="nav-countdown">Countdown Timer</a>
                 <a href="#" id="nav-stopwatch">Stopwatch</a>
-                <a href="https://github.com/karadhub/easytimer" target="_blank" rel="noopener">Source Code</a>
+                <a href="https://github.com/karadhub/easytimer" target="_blank" rel="noopener" class="github-link">
+                    <img src="images/github-icon.svg" alt="GitHub" class="github-icon">
+                    <span class="github-text">Source Code</span>
+                </a>
             </nav>
             <div class="hamburger-menu">
                 <div class="bar"></div>
@@ -29,74 +32,63 @@
 
         <div id="countdown-timer-section" class="timer-section">
             <div class="glass-container">
-                <header>
-                    <h1>Countdown Timer</h1>
-                </header>
-                <table>
-                    <tr id="timer">
-                        <td><span id="timer_main"><strong>00:00:00</strong></span></td>
-                    </tr>
-                    <tr class="presets-row">
-                        <td id="presets">
-                            <div class="preset-buttons">
-                                <button class="preset-btn" data-hours="0" data-minutes="25"
-                                    data-seconds="0">Pomodoro<br><small>25m</small></button>
-                                <button class="preset-btn" data-hours="0" data-minutes="5" data-seconds="0">Short
-                                    Break<br><small>5m</small></button>
-                                <button class="preset-btn" data-hours="0" data-minutes="15" data-seconds="0">Long
-                                    Break<br><small>15m</small></button>
-                                <button class="preset-btn" data-hours="0" data-minutes="30"
-                                    data-seconds="0">Workout<br><small>30m</small></button>
-                                <button class="preset-btn" data-hours="0" data-minutes="1"
-                                    data-seconds="0">Quick<br><small>1m</small></button>
-                            </div>
-                            <div class="custom-preset">
-                                <button id="save-preset-btn" type="button">Save Current as Preset</button>
-                                <div id="custom-presets"></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="controls-row">
-                        <td id="controls">
-                            <div>
-                                Count down
-                                <input id="hour_input" type="text" value="00" aria-label="Hours">
-                                h
-                                <input id="min_input" type="text" value="00" aria-label="Minutes">
-                                m
-                                <input id="sec_input" type="text" value="00" aria-label="Seconds">
-                                s
-                                &nbsp;
-                                <input id="set_button" type="button" value="Set Time" onclick="setTime()">
-                            </div>
-                            <div>
-                                <input id="start_button_countdown" type="button" value="Start" onclick="start()">
-                                <input id="pause_button" type="button" value="Pause" onclick="pause()">
-                                <input id="reset_button_countdown" type="button" value="Reset" onclick="reset()">
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+                <h1 class="timer-title">Countdown Timer</h1>
+                <div class="timer-display">
+                    <span id="timer_main">00:00:00</span>
+                </div>
+                <div class="presets">
+                    <button class="preset-btn" data-hours="0" data-minutes="25"
+                        data-seconds="0">Pomodoro<br><small>25m</small></button>
+                    <button class="preset-btn" data-hours="0" data-minutes="5" data-seconds="0">Short
+                        Break<br><small>5m</small></button>
+                    <button class="preset-btn" data-hours="0" data-minutes="15" data-seconds="0">Long
+                        Break<br><small>15m</small></button>
+                    <button class="preset-btn" data-hours="0" data-minutes="30"
+                        data-seconds="0">Workout<br><small>30m</small></button>
+                    <button class="preset-btn" data-hours="0" data-minutes="1"
+                        data-seconds="0">Quick<br><small>1m</small></button>
+                </div>
+                <div class="save-preset-container">
+                    <button id="save-preset-btn">Save Current as Preset</button>
+                    <div id="custom-presets"></div>
+                </div>
+                <div class="custom-time-setter">
+                    <span class="countdown-label">Count down</span>
+                    <div class="time-inputs">
+                        <div class="time-input-group">
+                            <input id="hour_input" type="text" value="00" maxlength="2" aria-label="Hours">
+                            <span>h</span>
+                        </div>
+                        <div class="time-input-group">
+                            <input id="min_input" type="text" value="00" maxlength="2" aria-label="Minutes">
+                            <span>m</span>
+                        </div>
+                        <div class="time-input-group">
+                            <input id="sec_input" type="text" value="00" maxlength="2" aria-label="Seconds">
+                            <span>s</span>
+                        </div>
+                    </div>
+                    <button id="set_button" onclick="setTime()">Set Time</button>
+                </div>
+                <div class="controls">
+                    <button id="start_button_countdown" onclick="start()">Start</button>
+                    <button id="pause_button" onclick="pause()">Pause</button>
+                    <button id="reset_button_countdown" onclick="reset()">Reset</button>
+                </div>
             </div>
         </div>
 
-        <div id="stopwatch-section" class="timer-section" style="display: none;">
+        <div id="stopwatch-section" class="timer-section">
             <div class="glass-container">
-                <header>
-                    <h1>Stopwatch</h1>
-                </header>
-                <table>
-                    <tr id="timer">
-                        <td><span id="stopwatch_main"><strong>00:00,00</strong></span></td>
-                    </tr>
-                    <tr id="controls">
-                        <td>
-                            <input id="start_button_stopwatch" type="button" value="Start" onclick="startStopwatch()">
-                            <input id="stop_button" type="button" value="Stop" onclick="stopStopwatch()">
-                            <input id="reset_button_stopwatch" type="button" value="Reset" onclick="resetStopwatch()">
-                        </td>
-                    </tr>
-                </table>
+                <h1 class="timer-title">Stopwatch</h1>
+                <div class="timer-display">
+                    <span id="stopwatch_main">00:00,00</span>
+                </div>
+                <div class="controls">
+                    <button id="start_button_stopwatch" onclick="startStopwatch()">Start</button>
+                    <button id="stop_button" onclick="stopStopwatch()">Stop</button>
+                    <button id="reset_button_stopwatch" onclick="resetStopwatch()">Reset</button>
+                </div>
             </div>
         </div>
     </div>
