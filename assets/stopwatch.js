@@ -74,7 +74,7 @@
 
         stopwatch_main.innerHTML = `<strong>${padZero(m)}:${padZero(
             s
-        )},${padZero(ms)}</strong>`;
+        )}:${padZero(ms)}</strong>`;
         stopwatch_main.style.color = "#A3DAFD";
     }
 
